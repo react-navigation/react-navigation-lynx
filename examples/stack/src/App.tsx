@@ -1,6 +1,6 @@
 import { useEffect, useState } from '@lynx-js/react';
 import {
-  BaseNavigationContainer,
+  createStaticNavigation,
   StackActions,
   useNavigation,
   usePreventRemove,
@@ -21,7 +21,22 @@ type StackParamList = {
   Detail: undefined;
 };
 
-const Stack = createLynxStackNavigator<StackParamList>();
+const Stack = createLynxStackNavigator({
+  initialRouteName: 'Home',
+  screens: {
+    Home: HomeScreen,
+    Depth: {
+      screen: DepthScreen,
+      initialParams: { level: 1 },
+    },
+    PreventRemove: PreventRemoveScreen,
+    Events: EventsScreen,
+    Preload: PreloadScreen,
+    Detail: DetailScreen,
+  },
+});
+
+const Navigation = createStaticNavigation(Stack);
 
 type Nav = LynxStackNavigationProp<StackParamList>;
 
@@ -39,20 +54,7 @@ export function App() {
         backgroundColor: colors.background,
       }}
     >
-      <BaseNavigationContainer>
-        <Stack.Navigator initialRouteName='Home'>
-          <Stack.Screen name='Home' component={HomeScreen} />
-          <Stack.Screen
-            name='Depth'
-            component={DepthScreen}
-            initialParams={{ level: 1 }}
-          />
-          <Stack.Screen name='PreventRemove' component={PreventRemoveScreen} />
-          <Stack.Screen name='Events' component={EventsScreen} />
-          <Stack.Screen name='Preload' component={PreloadScreen} />
-          <Stack.Screen name='Detail' component={DetailScreen} />
-        </Stack.Navigator>
-      </BaseNavigationContainer>
+      <Navigation />
     </page>
   );
 }
