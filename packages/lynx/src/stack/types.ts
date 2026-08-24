@@ -13,17 +13,9 @@ import type * as Lynx from '@lynx-js/types';
 
 export type LynxStackPresentation = 'card' | 'formSheet';
 
-/**
- * How a screen behaves while it is not the focused one.
- *
- * Mirrors `inactiveBehavior` in `@react-navigation/native-stack`.
- */
-export type LynxStackInactiveBehavior = 'none' | 'pause' | 'unmount';
-
 export type LynxStackNavigationOptions = {
   presentation?: LynxStackPresentation | undefined;
   contentStyle?: Lynx.CSSProperties | undefined;
-  inactiveBehavior?: LynxStackInactiveBehavior | undefined;
 };
 
 export type LynxStackNavigationEventMap = {

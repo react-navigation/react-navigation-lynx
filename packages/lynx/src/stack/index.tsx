@@ -13,7 +13,6 @@ export {
 export type {
   LynxStackDescriptor,
   LynxStackDescriptorMap,
-  LynxStackInactiveBehavior,
   LynxStackNavigationEventMap,
   LynxStackNavigationHelpers,
   LynxStackNavigationOptions,
