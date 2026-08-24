@@ -1,0 +1,6 @@
+[submodule "react-navigation"]
+	path = react-navigation
+	url = https://github.com/react-navigation/react-navigation.git
+[submodule "lynx-screens"]
+	path = lynx-screens
+	url = https://github.com/software-mansion-labs/lynx-screens.git

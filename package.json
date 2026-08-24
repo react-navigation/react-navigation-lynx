@@ -1,0 +1,18 @@
+{
+  "name": "react-navigation-lynx",
+  "private": true,
+  "description": "Routing and navigation for Lynx apps",
+  "packageManager": "pnpm@11.13.1",
+  "engines": {
+    "node": ">= 24.13.0"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r --filter './packages/*' run typecheck"
+  },
+  "devDependencies": {
+    "@lynx-js/react": "^0.125.0",
+    "@lynx-js/types": "^3.4.11",
+    "@types/node": "^24.0.0",
+    "typescript": "~5.9.2"
+  }
+}

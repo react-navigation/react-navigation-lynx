@@ -1,0 +1,36 @@
+{
+  "name": "@react-navigation/lynx",
+  "version": "0.0.0",
+  "description": "Lynx integration for React Navigation",
+  "type": "module",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "exports": {
+    ".": "./src/index.tsx",
+    "./stack": "./src/stack/index.tsx",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@react-navigation/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "@lynx-js/react": "*",
+    "lynx-screens": "*"
+  },
+  "devDependencies": {
+    "@lynx-js/react": "^0.125.0",
+    "@lynx-js/testing-environment": "^0.2.0",
+    "@lynx-js/types": "^3.4.11",
+    "jsdom": "^26.0.0",
+    "lynx-screens": "workspace:*",
+    "typescript": "~5.9.2",
+    "vitest": "^3.2.0"
+  },
+  "scripts": {
+    "typecheck": "node ./scripts/typecheck.mjs",
+    "test": "vitest run"
+  }
+}

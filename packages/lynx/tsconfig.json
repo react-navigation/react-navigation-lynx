@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    // Kept aligned with react-navigation's root tsconfig: the vendored sources
+    // are compiled by us, so divergence shows up as phantom errors in their
+    // code (unused @ts-expect-error, lost inference) rather than in ours.
+    "target": "esnext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "customConditions": ["@react-navigation/source"],
+    "lib": ["esnext", "dom"],
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@lynx-js/react",
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "resolveJsonModule": true,
+    "resolvePackageJsonImports": false,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "paths": {
+      "react": ["./src/react-compat.ts"]
+    }
+  },
+  "include": ["src"]
+}
