@@ -1,4 +1,8 @@
-import { BaseNavigationContainer, useNavigation } from '@react-navigation/lynx';
+import {
+  BaseNavigationContainer,
+  useNavigation,
+  usePreventRemove,
+} from '@react-navigation/lynx';
 import {
   createLynxStackNavigator,
   type LynxStackNavigationProp,
@@ -27,11 +31,7 @@ export function App() {
           <Stack.Screen name='Home' component={HomeScreen} />
           <Stack.Screen name='Blue' component={BlueScreen} />
           {/* Refuses the native dismiss - hardware back should not pop this. */}
-          <Stack.Screen
-            name='Red'
-            component={RedScreen}
-            options={{ preventNativeDismiss: true }}
-          />
+          <Stack.Screen name='Red' component={RedScreen} />
         </Stack.Navigator>
       </BaseNavigationContainer>
     </page>
@@ -129,6 +129,10 @@ function BlueScreen() {
 }
 
 function RedScreen() {
+  // Blocks the native dismiss. The native side stops the gesture and reports
+  // it back, and this listener is what keeps the route from being popped.
+  usePreventRemove(true, () => {});
+
   return (
     <Screen
       title='Red (back is blocked)'

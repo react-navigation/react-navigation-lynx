@@ -24,12 +24,6 @@ export type LynxStackNavigationOptions = {
   presentation?: LynxStackPresentation | undefined;
   contentStyle?: Lynx.CSSProperties | undefined;
   inactiveBehavior?: LynxStackInactiveBehavior | undefined;
-  /**
-   * Blocks the native dismiss gesture (Android back, iOS swipe) so removal has
-   * to go through the navigator. `usePreventRemove` sets this per route; the
-   * option is here for screens that always refuse it.
-   */
-  preventNativeDismiss?: boolean | undefined;
 };
 
 export type LynxStackNavigationEventMap = {
