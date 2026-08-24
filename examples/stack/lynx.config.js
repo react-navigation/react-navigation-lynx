@@ -2,6 +2,7 @@ import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 
 import { pluginQRCode } from '@lynx-js/qrcode-rsbuild-plugin';
+import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
 import { pluginReactLynx } from '@lynx-js/react-rsbuild-plugin';
 import { defineConfig } from '@lynx-js/rspeedy';
 
@@ -48,6 +49,23 @@ export default defineConfig({
   },
   plugins: [
     pluginReactLynx(),
+    // The build is the only place that exercises the source export condition
+    // and the extension aliasing, so it should fail on type errors too rather
+    // than leaving them to the editor.
+    pluginTypeCheck({
+      tsCheckerOptions: {
+        issue: {
+          // The submodules are compiled by us but written against other type
+          // universes - core against React's, lynx-screens against a looser
+          // config than this one. They typecheck themselves in their own
+          // repos; reporting them here would only bury this app's own errors.
+          exclude: [
+            { file: '../../react-navigation/**' },
+            { file: '../../lynx-screens/**' },
+          ],
+        },
+      },
+    }),
     pluginQRCode({
       schema(url) {
         return `${url}?fullscreen=true`;

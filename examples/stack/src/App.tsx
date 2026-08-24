@@ -194,15 +194,12 @@ function EventsScreen() {
       setLog((entries) => [entry, ...entries].slice(0, 6));
 
     const unsubscribeStart = navigation.addListener(
-      // @ts-expect-error: the event map is declared on the navigator, and this
-      // screen holds the generic helpers type.
       'transitionStart',
       (e: { data: { closing: boolean } }) =>
         append(`transitionStart closing=${e.data.closing}`)
     );
 
     const unsubscribeEnd = navigation.addListener(
-      // @ts-expect-error: see above.
       'transitionEnd',
       (e: { data: { closing: boolean } }) =>
         append(`transitionEnd closing=${e.data.closing}`)

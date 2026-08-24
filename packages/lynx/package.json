@@ -24,6 +24,7 @@
     "@lynx-js/react": "^0.125.0",
     "@lynx-js/testing-environment": "^0.2.0",
     "@lynx-js/types": "^3.4.11",
+    "@types/react": "^19.2.0",
     "jsdom": "^26.0.0",
     "lynx-screens": "workspace:*",
     "typescript": "~5.9.2",

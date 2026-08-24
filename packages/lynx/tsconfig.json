@@ -27,10 +27,7 @@
     "resolvePackageJsonImports": false,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "noEmit": true,
-    "paths": {
-      "react": ["./src/react-compat.ts"]
-    }
+    "noEmit": true
   },
   "include": ["src"]
 }
