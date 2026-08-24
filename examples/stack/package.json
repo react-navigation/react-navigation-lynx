@@ -1,0 +1,21 @@
+{
+  "name": "@react-navigation/example-stack",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rspeedy build",
+    "dev": "rspeedy dev"
+  },
+  "dependencies": {
+    "@react-navigation/lynx": "workspace:*",
+    "@lynx-js/react": "^0.125.0",
+    "lynx-screens": "workspace:*"
+  },
+  "devDependencies": {
+    "@lynx-js/qrcode-rsbuild-plugin": "^0.6.0",
+    "@lynx-js/react-rsbuild-plugin": "^0.19.1",
+    "@lynx-js/rspeedy": "^0.16.5",
+    "@lynx-js/types": "^3.4.11"
+  }
+}

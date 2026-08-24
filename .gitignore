@@ -3,3 +3,5 @@ dist
 lib
 .DS_Store
 *.log
+.turbo
+.rspeedy

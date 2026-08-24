@@ -7,12 +7,16 @@
     "node": ">= 24.13.0"
   },
   "scripts": {
-    "typecheck": "pnpm -r --filter './packages/*' run typecheck"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
     "@lynx-js/react": "^0.125.0",
     "@lynx-js/types": "^3.4.11",
     "@types/node": "^24.0.0",
+    "turbo": "^2.5.0",
     "typescript": "~5.9.2"
   }
 }
