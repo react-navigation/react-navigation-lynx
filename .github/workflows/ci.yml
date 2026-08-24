@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # The submodules are the dependency graph, not a convenience: core and
+      # lynx-screens are consumed as source, so a shallow checkout builds
+      # nothing.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Run unit tests
+        run: pnpm test
+
+  build-example:
+    runs-on: ubuntu-latest
+    steps:
+      # Building the example is what proves the submodule wiring still holds -
+      # the source export condition and the extension aliasing both live in the
+      # bundler config and nothing else exercises them.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build example
+        run: pnpm --filter @react-navigation/example-stack build
