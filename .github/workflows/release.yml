@@ -13,16 +13,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Opens (or updates) a "Version Packages" PR that consumes the pending
-  # changesets. Merging that PR is what publishes a real release - this job
-  # publishes nothing on its own.
   version:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-      # npm trusted publishing exchanges this for a short-lived credential, so
-      # no NPM_TOKEN is involved.
       id-token: write
     steps:
       - name: Checkout
@@ -41,24 +36,18 @@ jobs:
       - name: Attempt to release
         uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         env:
-          # The changelog plugin reads PR and commit metadata from the API, and
-          # fails outright without a token.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           publish-script: pnpm changeset publish
           pr-title: "chore: release ${{ steps.date.outputs.date }}"
           commit-message: "chore: release ${{ steps.date.outputs.date }}"
 
-  # Every commit on main also goes out as a canary, so a fix can be tried
-  # without waiting for the version PR to be merged. Same package name as a
-  # real release, kept apart by the `canary` dist-tag - one package to
-  # configure a trusted publisher for, and `latest` stays where it was.
   canary:
     runs-on: ubuntu-latest
-    # A fork has no trusted-publisher entry, so the exchange would fail there.
     if: ${{ github.repository == 'react-navigation/react-navigation-lynx' }}
     permissions:
       contents: read
+      pull-requests: read
       id-token: write
     steps:
       - name: Checkout
@@ -77,9 +66,6 @@ jobs:
           pnpm changeset version --snapshot canary
           node .github/scripts/canary-snapshot.mjs
 
-      # No registry-url setup step anywhere in this workflow, on purpose: it
-      # writes an .npmrc pointing at NODE_AUTH_TOKEN, and trusted publishing
-      # only kicks in when npm finds no token to use.
       - name: Publish canary packages
         run: >
           pnpm --recursive --filter "./packages/*" publish
