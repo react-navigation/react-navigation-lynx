@@ -55,14 +55,11 @@ export default defineConfig({
     pluginTypeCheck({
       tsCheckerOptions: {
         issue: {
-          // The submodules are compiled by us but written against other type
-          // universes - core against React's, lynx-screens against a looser
-          // config than this one. They typecheck themselves in their own
-          // repos; reporting them here would only bury this app's own errors.
-          exclude: [
-            { file: '../../react-navigation/**' },
-            { file: '../../lynx-screens/**' },
-          ],
+          // react-navigation's sources assume `@types/node` - upstream's root
+          // tsconfig sets `types: ["node"]`, and `BaseNavigationContainer`
+          // reaches for `Error.captureStackTrace`. This app is not a Node
+          // program, so it reports what upstream's own CI already covers.
+          exclude: [{ file: '../../react-navigation/**' }],
         },
       },
     }),

@@ -3,6 +3,9 @@
     // Kept aligned with react-navigation's root tsconfig: the vendored sources
     // are compiled by us, so divergence shows up as phantom errors in their
     // code (unused @ts-expect-error, lost inference) rather than in ours.
+    // The compiler version counts as part of that alignment - TypeScript 5.9
+    // loses the contextual type of `BaseNavigationContainer`'s `addListener`,
+    // which upstream's `^6.0.3` infers.
     "target": "esnext",
     "module": "preserve",
     "moduleResolution": "bundler",
