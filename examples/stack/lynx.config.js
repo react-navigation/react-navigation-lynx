@@ -49,16 +49,9 @@ export default defineConfig({
   },
   plugins: [
     pluginReactLynx(),
-    // The build is the only place that exercises the source export condition
-    // and the extension aliasing, so it should fail on type errors too rather
-    // than leaving them to the editor.
     pluginTypeCheck({
       tsCheckerOptions: {
         issue: {
-          // react-navigation's sources assume `@types/node` - upstream's root
-          // tsconfig sets `types: ["node"]`, and `BaseNavigationContainer`
-          // reaches for `Error.captureStackTrace`. This app is not a Node
-          // program, so it reports what upstream's own CI already covers.
           exclude: [{ file: '../../react-navigation/**' }],
         },
       },
