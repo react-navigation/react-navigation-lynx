@@ -8,9 +8,6 @@ packages:
   - react-navigation/packages/routers
   - lynx-screens
 
-overrides:
-  '@types/react': ~19.2.17
-
 allowBuilds:
   core-js: true
   esbuild: true
