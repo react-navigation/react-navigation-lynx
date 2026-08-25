@@ -34,6 +34,10 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Get current date
+        id: date
+        run: echo "date=$(date -u +'%Y-%m-%d %H:%M:%S')" >> "$GITHUB_OUTPUT"
+
       - name: Attempt to release
         uses: changesets/action@v1
         env:
@@ -42,8 +46,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           publish: pnpm changeset publish
-          title: "chore: release"
-          commit: "chore: release"
+          title: "chore: release ${{ steps.date.outputs.date }}"
+          commit: "chore: release ${{ steps.date.outputs.date }}"
 
   # Every commit on main also goes out as a canary, so a fix can be tried
   # without waiting for the version PR to be merged. Same package name as a
