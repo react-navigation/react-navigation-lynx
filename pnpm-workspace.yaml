@@ -8,6 +8,12 @@ packages:
   - react-navigation/packages/routers
   - lynx-screens
 
+# lynx-screens pins @types/react 18 while everything else is on 19. Two copies
+# of React's types in one program means two incompatible ReactNode types, and
+# every component boundary between the two starts erroring.
+overrides:
+  '@types/react': ^19.2.0
+
 allowBuilds:
   core-js: true
   esbuild: true
