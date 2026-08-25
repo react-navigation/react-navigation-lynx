@@ -1,5 +1,4 @@
 import { createRequire } from 'node:module';
-import { dirname, resolve } from 'node:path';
 
 import { pluginQRCode } from '@lynx-js/qrcode-rsbuild-plugin';
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
@@ -8,13 +7,7 @@ import { defineConfig } from '@lynx-js/rspeedy';
 
 const require = createRequire(import.meta.url);
 
-// `@react-navigation/core` is written against React. On Lynx those imports
-// have to land on the package's compat layer, which fills the gaps ReactLynx
-// has yet to cover (`use`, `useInsertionEffect`, `startTransition`).
-const reactCompat = resolve(
-  dirname(require.resolve('@react-navigation/lynx/package.json')),
-  'src/react-compat.ts'
-);
+const reactCompat = require.resolve('@react-navigation/lynx/react-compat');
 
 export default defineConfig({
   source: {

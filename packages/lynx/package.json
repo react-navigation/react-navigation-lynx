@@ -25,6 +25,7 @@
   "exports": {
     ".": "./src/index.tsx",
     "./stack": "./src/stack/index.tsx",
+    "./react-compat": "./src/react-compat.ts",
     "./package.json": "./package.json"
   },
   "files": [
