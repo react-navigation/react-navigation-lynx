@@ -15,6 +15,7 @@ concurrency:
 jobs:
   version:
     runs-on: ubuntu-latest
+    environment: npm
     permissions:
       contents: write
       pull-requests: write
@@ -44,6 +45,7 @@ jobs:
 
   canary:
     runs-on: ubuntu-latest
+    environment: npm
     if: ${{ github.repository == 'react-navigation/react-navigation-lynx' }}
     permissions:
       contents: read
