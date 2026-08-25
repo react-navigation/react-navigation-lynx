@@ -1,28 +1,29 @@
-// Rewrite the publishable packages for a canary release, the way lynx-stack
-// does it: the package is renamed rather than tagged, so `@react-navigation/lynx`
-// ships its canaries as `@react-navigation/lynx-canary`. That keeps the real
-// package's version list free of throwaway builds, and `latest` on the canary
-// package is always the newest one.
+// Shorten the versions `changeset version --snapshot canary` just wrote.
 //
-// Run after `changeset version --snapshot canary`, which has already written
-// the snapshot versions.
+// It produces `0.1.0-canary-20260825085751-8f531b1a8f9467bf83c919bc5cc78260a2699386`;
+// this trims the timestamp to a date and the commit to eight characters, which
+// is enough to identify a build and short enough to read in an install command.
+//
+// Canaries go out under the real package name with the `canary` dist-tag, so
+// there is nothing else to rewrite: `latest` keeps pointing at the last real
+// release, and `workspace:` dependencies are resolved by pnpm at publish time.
 
 import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { EOL } from 'node:os';
 import path from 'node:path';
 
-const DEPENDENCY_FIELDS = ['dependencies', 'optionalDependencies'];
+/**
+ * The submodules are workspace members so we can develop against upstream
+ * source. Their versions are upstream's to set.
+ */
+function isOurs(dir, root) {
+  const relative = path.relative(root, dir);
 
-function canaryName(name) {
-  return `${name}-canary`;
+  return relative.startsWith(`packages${path.sep}`);
 }
 
-/**
- * `changeset version --snapshot` writes a full timestamp and commit. Trim them
- * so the version stays readable: `0.1.0-canary-20260825-abc12345`.
- */
-function canaryVersion(version) {
+function shorten(version) {
   const [base, tag, datetime, commit, ...rest] = version.split('-');
 
   if (base && tag && datetime && commit) {
@@ -38,17 +39,6 @@ function canaryVersion(version) {
   return version;
 }
 
-/**
- * The submodules are workspace members so we can develop against upstream
- * source. They are upstream's packages - renaming and publishing them would
- * put someone else's code out under our name.
- */
-function isOurs(dir, root) {
-  const relative = path.relative(root, dir);
-
-  return relative.startsWith(`packages${path.sep}`);
-}
-
 function main() {
   const root = process.cwd();
 
@@ -56,50 +46,15 @@ function main() {
     execSync('pnpm m ls --json --depth=-1', { encoding: 'utf8' })
   ).filter((pkg) => pkg.name != null && pkg.path != null);
 
-  const ours = workspace.filter((pkg) => {
-    if (!isOurs(pkg.path, root)) return false;
+  for (const pkg of workspace) {
+    if (!isOurs(pkg.path, root)) continue;
 
-    const manifest = JSON.parse(
-      readFileSync(path.join(pkg.path, 'package.json'), 'utf8')
-    );
-
-    return manifest.private !== true;
-  });
-
-  // Every canary package's version, so dependencies between them can be
-  // pointed at the canary names rather than versions that were never published.
-  const versions = new Map(
-    ours.map((pkg) => {
-      const manifest = JSON.parse(
-        readFileSync(path.join(pkg.path, 'package.json'), 'utf8')
-      );
-
-      return [manifest.name, canaryVersion(manifest.version)];
-    })
-  );
-
-  for (const pkg of ours) {
     const manifestPath = path.join(pkg.path, 'package.json');
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 
-    manifest.name = canaryName(manifest.name);
-    manifest.version = canaryVersion(manifest.version);
+    if (manifest.private === true) continue;
 
-    for (const field of DEPENDENCY_FIELDS) {
-      for (const name of Object.keys(manifest[field] ?? {})) {
-        if (versions.has(name)) {
-          manifest[field][name] = `npm:${canaryName(name)}@${versions.get(name)}`;
-        }
-      }
-    }
-
-    // A canary's peers are whatever the consumer already has; pinning them to
-    // a canary version would force that choice on them.
-    for (const name of Object.keys(manifest.peerDependencies ?? {})) {
-      if (versions.has(name)) {
-        manifest.peerDependencies[name] = '*';
-      }
-    }
+    manifest.version = shorten(manifest.version);
 
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}${EOL}`);
 
