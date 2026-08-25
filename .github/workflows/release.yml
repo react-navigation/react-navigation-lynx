@@ -39,15 +39,15 @@ jobs:
         run: echo "date=$(date -u +'%Y-%m-%d %H:%M:%S')" >> "$GITHUB_OUTPUT"
 
       - name: Attempt to release
-        uses: changesets/action@v1
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         env:
           # The changelog plugin reads PR and commit metadata from the API, and
           # fails outright without a token.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          publish: pnpm changeset publish
-          title: "chore: release ${{ steps.date.outputs.date }}"
-          commit: "chore: release ${{ steps.date.outputs.date }}"
+          publish-script: pnpm changeset publish
+          pr-title: "chore: release ${{ steps.date.outputs.date }}"
+          commit-message: "chore: release ${{ steps.date.outputs.date }}"
 
   # Every commit on main also goes out as a canary, so a fix can be tried
   # without waiting for the version PR to be merged. Same package name as a
