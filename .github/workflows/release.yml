@@ -39,9 +39,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          publish-script: pnpm changeset publish
           pr-title: "chore: release ${{ steps.date.outputs.date }}"
           commit-message: "chore: release ${{ steps.date.outputs.date }}"
+
+      - name: Publish packages
+        run: >
+          pnpm --recursive --filter "./packages/*" publish
+          --no-git-checks --access public
 
   canary:
     runs-on: ubuntu-latest
@@ -62,13 +66,23 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Version canary packages
+        id: canary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          pnpm changeset status --output "$RUNNER_TEMP/changeset-status.json"
+          if ! jq -e '[.releases[] | select(.type != "none")] | length > 0' \
+            "$RUNNER_TEMP/changeset-status.json" > /dev/null; then
+            echo "No changesets to preview." >> "$GITHUB_STEP_SUMMARY"
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           pnpm changeset version --snapshot canary
           node .github/scripts/canary-snapshot.mjs
+          echo "publish=true" >> "$GITHUB_OUTPUT"
 
       - name: Publish canary packages
+        if: steps.canary.outputs.publish == 'true'
         run: >
           pnpm --recursive --filter "./packages/*" publish
           --no-git-checks --access public --tag canary
