@@ -1,0 +1,24 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": ["pnpm-lock.yaml"],
+  "globalPassThroughEnv": ["CI", "NODE_OPTIONS"],
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": [],
+      "cache": false
+    },
+    "typecheck": {
+      "dependsOn": [],
+      "cache": false
+    }
+  }
+}

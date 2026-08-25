@@ -1,0 +1,38 @@
+name: Setup
+description: Check out the submodules, set up Node.js and install dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Get pnpm store path
+      id: pnpm-store
+      run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+      shell: bash
+
+    - name: Restore pnpm store
+      id: pnpm-cache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ steps.pnpm-store.outputs.path }}
+        key: ${{ runner.os }}-pnpm-store-v1-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-v1-
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile --prefer-offline
+      shell: bash
+
+    - name: Cache pnpm store
+      if: steps.pnpm-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ steps.pnpm-store.outputs.path }}
+        key: ${{ steps.pnpm-cache.outputs.cache-primary-key }}

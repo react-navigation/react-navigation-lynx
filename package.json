@@ -1,0 +1,26 @@
+{
+  "name": "react-navigation-lynx",
+  "private": true,
+  "description": "Routing and navigation for Lynx apps",
+  "packageManager": "pnpm@11.13.1",
+  "engines": {
+    "node": ">= 24.13.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "changeset": "changeset"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.1",
+    "@lynx-js/react": "^0.125.0",
+    "@lynx-js/types": "^4.1.0",
+    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
+    "@types/node": "^24.0.0",
+    "pkg-pr-new": "0.0.87",
+    "turbo": "^2.5.0",
+    "typescript": "^6.0.3"
+  }
+}

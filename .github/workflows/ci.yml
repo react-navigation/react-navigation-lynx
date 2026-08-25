@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # The submodules are the dependency graph, not a convenience: core and
+      # lynx-screens are consumed as source, so a shallow checkout builds
+      # nothing.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Run unit tests
+        run: pnpm test
+
+  build-example:
+    runs-on: ubuntu-latest
+    steps:
+      # Building the example is what proves the submodule wiring still holds -
+      # the source export condition and the extension aliasing both live in the
+      # bundler config and nothing else exercises them.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build example
+        run: pnpm --filter @react-navigation/example-stack build
+
+  preview:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          # `changeset status --since` runs `git merge-base`, which needs real
+          # history. Every other job keeps the shallow clone.
+          fetch-depth: 0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Collect packages with changesets
+        id: changeset
+        run: |
+          pnpm changeset status --since=origin/${{ github.base_ref }} --output .changeset-status.json
+          PACKAGE_DIRS=$(node .github/scripts/list-changeset-packages.cjs .changeset-status.json | tr '\n' ' ')
+          if [ -z "$(echo "$PACKAGE_DIRS" | tr -d '[:space:]')" ]; then
+            echo "No publishable packages affected by changesets; skipping preview."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Publishing to pkg.pr.new:"
+          printf '  %s\n' $PACKAGE_DIRS
+          {
+            echo "skip=false"
+            echo "package-dirs<<EOF"
+            echo "$PACKAGE_DIRS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Publish to pkg.pr.new
+        if: steps.changeset.outputs.skip == 'false'
+        env:
+          PACKAGE_DIRS: ${{ steps.changeset.outputs.package-dirs }}
+        run: |
+          read -ra package_dirs <<< "$PACKAGE_DIRS"
+          pnpm exec pkg-pr-new publish \
+            --compact \
+            --pnpm \
+            --commentWithSha \
+            --packageManager=pnpm \
+            --no-template \
+            "${package_dirs[@]}"

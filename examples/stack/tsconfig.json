@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    // Resolve react-navigation packages to their TypeScript sources, the same
+    // way the bundler does. Without it `@react-navigation/lynx` looks empty,
+    // because it re-exports a core whose lib/ was never built.
+    "customConditions": ["@react-navigation/source"],
+    "lib": ["esnext"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@lynx-js/react",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolvePackageJsonImports": false
+  },
+  "include": ["src", "lynx.config.js"]
+}

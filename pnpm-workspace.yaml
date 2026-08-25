@@ -1,0 +1,13 @@
+packages:
+  - packages/*
+  - examples/*
+  # Vendored so we can track react-navigation and lynx-screens as they move,
+  # instead of waiting on their releases. Only the packages we build on are
+  # linked - pulling in the rest would drag React Native's toolchain along.
+  - react-navigation/packages/core
+  - react-navigation/packages/routers
+  - lynx-screens
+
+allowBuilds:
+  core-js: true
+  esbuild: true
