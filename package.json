@@ -14,7 +14,7 @@
     "changeset": "changeset"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.31.1",
+    "@changesets/cli": "^3.0.1",
     "@lynx-js/react": "^0.125.0",
     "@lynx-js/types": "^4.1.0",
     "@svitejs/changesets-changelog-github-compact": "^1.2.0",
