@@ -2,6 +2,23 @@
   "name": "@react-navigation/lynx",
   "version": "0.0.0",
   "description": "Lynx integration for React Navigation",
+  "keywords": [
+    "react",
+    "lynx",
+    "react-navigation"
+  ],
+  "homepage": "https://reactnavigation.org",
+  "bugs": {
+    "url": "https://github.com/react-navigation/react-navigation-lynx/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-navigation/react-navigation-lynx.git",
+    "directory": "packages/lynx"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./src/index.tsx",
   "types": "./src/index.tsx",
