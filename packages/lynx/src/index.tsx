@@ -10,4 +10,14 @@ export {
 export { DarkTheme } from './theming/DarkTheme';
 export { LightTheme as DefaultTheme } from './theming/LightTheme';
 
+export {
+  getInitialURL,
+  INIT_DATA_KEY,
+  RN_URL_EVENT,
+  subscribe,
+  URL_EVENT,
+  type NavigationInitData,
+} from './linking';
+export type { LinkingOptions, LinkingPrefix } from './useLinking';
+
 export * from '@react-navigation/core';

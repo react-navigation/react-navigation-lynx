@@ -1,8 +1,11 @@
 import { useEffect, useState } from '@lynx-js/react';
 import {
   createStaticNavigation,
+  getInitialURL,
+  type LinkingOptions,
   StackActions,
   useNavigation,
+  useNavigationState,
   usePreventRemove,
 } from '@react-navigation/lynx';
 import {
@@ -38,6 +41,28 @@ const Stack = createLynxStackNavigator({
 
 const Navigation = createStaticNavigation(Stack);
 
+/**
+ * The host hands a route over in `initData.__navigation`, so a link like
+ * `/depth/3` lands on that screen instead of on Home. Paths only ever produce
+ * route names and params - the screen options stay in code.
+ */
+const linking: LinkingOptions<StackParamList> = {
+  config: {
+    screens: {
+      Home: '',
+      Depth: {
+        path: 'depth/:level',
+        parse: { level: (value: string) => Number(value) },
+        stringify: { level: (value: number) => String(value) },
+      },
+      PreventRemove: 'prevent-remove',
+      Events: 'events',
+      Preload: 'preload',
+      Detail: 'detail',
+    },
+  },
+};
+
 type Nav = LynxStackNavigationProp<StackParamList>;
 
 function useNav() {
@@ -54,7 +79,7 @@ export function App() {
         backgroundColor: colors.background,
       }}
     >
-      <Navigation />
+      <Navigation linking={linking} />
     </page>
   );
 }
@@ -76,9 +101,19 @@ const DEMOS: { route: keyof StackParamList; label: string; note: string }[] = [
 
 function HomeScreen() {
   const navigation = useNav();
+  // Rendered so a deep link can be confirmed from the device without a debugger.
+  const routeNames = useNavigationState((state) =>
+    state.routes.map((route) => route.name).join(' \u203a ')
+  );
 
   return (
     <Screen title='Lynx stack' subtitle='React Navigation 8 on Lynx Screens'>
+      <Readout
+        lines={[
+          `launch route: ${getInitialURL() ?? '(none)'}`,
+          `stack: ${routeNames}`,
+        ]}
+      />
       {DEMOS.map((demo) => (
         <view key={demo.route}>
           <Button

@@ -32,7 +32,8 @@
     "src"
   ],
   "dependencies": {
-    "@react-navigation/core": "workspace:^"
+    "@react-navigation/core": "workspace:^",
+    "escape-string-regexp": "^5.0.0"
   },
   "peerDependencies": {
     "@lynx-js/react": "*",
