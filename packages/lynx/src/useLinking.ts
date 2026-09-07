@@ -62,9 +62,7 @@ function extractPath(
 
 /** The Lynx counterpart of `useLinking` in `@react-navigation/native`. */
 export function useLinking<ParamList extends {} = ParamListBase>(
-  // A getter, not a ref: under ReactLynx a ref on `BaseNavigationContainer`
-  // yields the Preact component instance, not the imperative handle.
-  getNavigation: () => NavigationContainerRef<ParamListBase> | undefined,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>,
   options: LinkingOptions<ParamList> | undefined
 ) {
   const {
@@ -141,7 +139,7 @@ export function useLinking<ParamList extends {} = ParamListBase>(
     }
 
     const listener = (url: string) => {
-      const navigation = getNavigation();
+      const navigation = ref.current;
 
       if (!navigation) {
         return;
@@ -176,7 +174,7 @@ export function useLinking<ParamList extends {} = ParamListBase>(
     };
 
     return subscribe(listener) ?? undefined;
-  }, [enabled, getNavigation, getStateFromURL, subscribe]);
+  }, [enabled, ref, getStateFromURL, subscribe]);
 
   return { getInitialState };
 }

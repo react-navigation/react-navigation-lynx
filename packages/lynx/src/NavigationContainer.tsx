@@ -1,6 +1,5 @@
 import {
   BaseNavigationContainer,
-  NavigationContainerRefContext,
   type NavigationContainerProps,
   type NavigationContainerRef,
   type NavigationState,
@@ -46,14 +45,7 @@ export function NavigationContainer<ParamList extends {} = ParamListBase>({
     () => refContainer.current as NavigationContainerRef<ParamList>
   );
 
-  const navigationRef = React.useRef<
-    NavigationContainerRef<ParamListBase> | undefined
-  >(undefined);
-
-  const { getInitialState } = useLinking(
-    React.useCallback(() => navigationRef.current, []),
-    linking
-  );
+  const { getInitialState } = useLinking(refContainer, linking);
 
   // Read once: later URLs go through the subscription instead.
   const [linkingInitialState] = React.useState(() =>
@@ -78,28 +70,7 @@ export function NavigationContainer<ParamList extends {} = ParamListBase>({
       onStateChange={handleStateChange}
       ref={refContainer}
     >
-      <LinkingBridge navigationRef={navigationRef} />
       {rest.children}
     </BaseNavigationContainer>
   );
-}
-
-
-/**
- * Publishes the container's imperative handle out of the tree: on ReactLynx a
- * ref on `BaseNavigationContainer` hands back the Preact component instance
- * instead, so `useLinking` reads it from context.
- */
-function LinkingBridge({
-  navigationRef,
-}: {
-  navigationRef: React.RefObject<
-    NavigationContainerRef<ParamListBase> | undefined
-  >;
-}) {
-  const container = React.useContext(NavigationContainerRefContext);
-
-  navigationRef.current = container;
-
-  return null;
 }
