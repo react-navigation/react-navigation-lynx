@@ -73,13 +73,13 @@ importers:
         specifier: ^9.32.0
         version: 9.39.5
       '@lynx-js/autolink-codegen':
-        specifier: ^0.5.0
-        version: 0.5.0
+        specifier: ^0.4.1
+        version: 0.4.1
       '@lynx-js/react':
-        specifier: ^0.126.0
-        version: 0.126.0(@lynx-js/types@4.2.1)(@types/react@19.2.18)
+        specifier: ^0.125.0
+        version: 0.125.0(@lynx-js/types@4.2.1)(@types/react@19.2.18)
       '@lynx-js/types':
-        specifier: ^4.2.1
+        specifier: ^4.1.0
         version: 4.2.1
       '@types/react':
         specifier: ~19.2.17
@@ -1420,8 +1420,8 @@ packages:
     peerDependencies:
       tslib: '2'
 
-  '@lynx-js/autolink-codegen@0.5.0':
-    resolution: {integrity: sha512-TXmwn4NSYx4T9OEEyJV+mrRZatC9nLAf50eEPk/qDOIIsf6bMQCusisy71Do0ZYepIOWJCY0VWLnPvFzcByG/g==}
+  '@lynx-js/autolink-codegen@0.4.1':
+    resolution: {integrity: sha512-wvg15R+y+kvUsPfYQ+vgFFuFgcs8hqx2bAaBHOTISH8fLTDCh0Wtfy71fsHeXkqI2TBtHyoDG9St1HfR1TwIEQ==}
     engines: {node: ^20 || ^22 || ^24}
     hasBin: true
 
@@ -1455,6 +1455,9 @@ packages:
     resolution: {integrity: sha512-3N+Wgc/kIc4/aG5KpdPWKsC9MsNngygeyg9JS6IOayS8AQJ37xjVEzlz1U3aYzT9al0RJKL7w4poa0tGaXBv1g==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@lynx-js/internal-preact@10.29.1-20260519060144-e6da44c':
+    resolution: {integrity: sha512-h2pRrt5oLK9LT1NkjyprtzJij/AdZGvv3CN6B5edL4chixqvITbxoCSdYy667Hl6+uKOBuxmCNZoDddgRfcLnw==}
 
   '@lynx-js/internal-preact@11.0.0-rc.1-20260903085447-f95471a':
     resolution: {integrity: sha512-RsU+km8Ulg+HVEJpx1/lq/38GUB+KtJKypB80gbumAtswd+og0RpVppy8bZTBVZY7jSjxx2GHYPTjT61+HDPaw==}
@@ -1517,6 +1520,15 @@ packages:
       '@lynx-js/template-webpack-plugin': ^0.13.0 || ^0.14.0 || ^0.15.0 || ^0.16.0
     peerDependenciesMeta:
       '@lynx-js/react':
+        optional: true
+
+  '@lynx-js/react@0.125.0':
+    resolution: {integrity: sha512-pZtToBXS9btDdxcKMRQYah5URQSKYN2ca4BsKog8QZMLeMCA6FGZzdhfroMxTbjMZkhrFfi9X9G4cD9OYfgTPg==}
+    peerDependencies:
+      '@lynx-js/types': '*'
+      '@types/react': ^18 || ^19.0.0
+    peerDependenciesMeta:
+      '@lynx-js/types':
         optional: true
 
   '@lynx-js/react@0.126.0':
@@ -6670,7 +6682,7 @@ snapshots:
       '@jsonjoy.com/codegen': 17.67.0(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@lynx-js/autolink-codegen@0.5.0': {}
+  '@lynx-js/autolink-codegen@0.4.1': {}
 
   '@lynx-js/cache-events-webpack-plugin@0.2.1':
     dependencies:
@@ -6696,6 +6708,8 @@ snapshots:
       '@rsbuild/core': 2.2.3(core-js@3.46.0)
 
   '@lynx-js/debug-metadata@0.1.0': {}
+
+  '@lynx-js/internal-preact@10.29.1-20260519060144-e6da44c': {}
 
   '@lynx-js/internal-preact@11.0.0-rc.1-20260903085447-f95471a': {}
 
@@ -6750,6 +6764,13 @@ snapshots:
       tiny-invariant: 1.3.3
     optionalDependencies:
       '@lynx-js/react': 0.126.0(@lynx-js/types@4.2.1)(@types/react@19.2.18)
+
+  '@lynx-js/react@0.125.0(@lynx-js/types@4.2.1)(@types/react@19.2.18)':
+    dependencies:
+      '@types/react': 19.2.18
+      preact: '@lynx-js/internal-preact@10.29.1-20260519060144-e6da44c'
+    optionalDependencies:
+      '@lynx-js/types': 4.2.1
 
   '@lynx-js/react@0.126.0(@lynx-js/types@4.2.1)(@types/react@19.2.18)':
     dependencies:
