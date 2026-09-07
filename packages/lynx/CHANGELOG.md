@@ -1,5 +1,17 @@
 # @react-navigation/lynx
 
+## 0.3.0
+
+### Minor Changes
+
+- Add deep linking. The host hands a route over in `initData.__navigation` for a cold start and emits a `reactnavigation.url` global event for later ones; everything downstream is `@react-navigation/core` unchanged. ([#9](https://github.com/react-navigation/react-navigation-lynx/pull/9))
+
+### Patch Changes
+
+- Add a README, so the published package documents installation, the stack navigator and the host side of deep linking. ([#12](https://github.com/react-navigation/react-navigation-lynx/pull/12))
+
+- Drop the context bridge the container used to reach its own imperative handle. ReactLynx 0.126 moves to Preact 11, where a ref on a function component arrives as a prop the way React 19 delivers it, so `useLinking` can take the ref directly. ([#10](https://github.com/react-navigation/react-navigation-lynx/pull/10))
+
 ## 0.2.0
 
 ### Minor Changes
