@@ -111,6 +111,9 @@ importers:
       '@react-navigation/core':
         specifier: workspace:^
         version: link:../../react-navigation/packages/core
+      escape-string-regexp:
+        specifier: ^5.0.0
+        version: 5.0.0
     devDependencies:
       '@lynx-js/react':
         specifier: ^0.125.0

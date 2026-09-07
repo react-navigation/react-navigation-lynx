@@ -1,5 +1,6 @@
 import {
   BaseNavigationContainer,
+  NavigationContainerRefContext,
   type NavigationContainerProps,
   type NavigationContainerRef,
   type NavigationState,
@@ -10,42 +11,30 @@ import {
 import * as React from 'react';
 
 import { LightTheme } from './theming/LightTheme';
+import { type LinkingOptions, useLinking } from './useLinking';
 
 export type NavigationContainerLynxProps<
   ParamList extends {} = ParamListBase,
 > = NavigationContainerProps & {
-  /**
-   * Theme handed to `useTheme` and to any navigator that reads colors.
-   */
   theme?: Theme | undefined;
-  /**
-   * Rendered while persisted state is being restored.
-   */
+  /** Rendered while persisted state is being restored. */
   fallback?: React.ReactNode | undefined;
+  /** Maps URLs handed over by the host onto navigation state. */
+  linking?: LinkingOptions<ParamList> | undefined;
   ref?: React.Ref<NavigationContainerRef<ParamList>> | undefined;
 };
 
 /**
  * The Lynx counterpart of `@react-navigation/native`'s `NavigationContainer`.
  *
- * It is the platform layer's entry point: everything a navigator needs that is
- * not navigation state itself - the theme, and eventually deep linking and
- * state persistence - is wired here rather than in each navigator.
- *
- * Not yet ported from React Native:
- *
- * - deep linking (`linking`), which needs a Lynx URL source
- * - state persistence, which needs a Lynx storage binding
- * - `useDocumentTitle`, which is a browser concern and has no Lynx meaning
- *
- * The hardware back button is deliberately absent: on Lynx it is handled by
- * the native stack per screen, through `preventNativeDismiss` and the dismiss
- * callbacks, so a container-level handler would fight with it.
+ * No state persistence yet, and no back-button handler: the native stack owns
+ * dismissal per screen, so a container-level one would fight with it.
  */
 export function NavigationContainer<ParamList extends {} = ParamListBase>({
   theme = LightTheme,
   fallback = null,
   onStateChange,
+  linking,
   ref,
   ...rest
 }: NavigationContainerLynxProps<ParamList>) {
@@ -57,23 +46,60 @@ export function NavigationContainer<ParamList extends {} = ParamListBase>({
     () => refContainer.current as NavigationContainerRef<ParamList>
   );
 
+  const navigationRef = React.useRef<
+    NavigationContainerRef<ParamListBase> | undefined
+  >(undefined);
+
+  const { getInitialState } = useLinking(
+    React.useCallback(() => navigationRef.current, []),
+    linking
+  );
+
+  // Read once: later URLs go through the subscription instead.
+  const [linkingInitialState] = React.useState(() =>
+    rest.initialState != null ? undefined : getInitialState()
+  );
+
+  const { children: _children, ...restWithoutChildren } = rest;
+
   const handleStateChange = (state: Readonly<NavigationState> | undefined) => {
     onStateChange?.(state);
   };
 
-  // Kept for parity with React Native, where this renders while persisted
-  // state is being restored. With no persistence yet there is nothing to wait
-  // for, so it only shows if a caller passes `fallback` and no children.
   if (rest.children == null) {
     return <ThemeProvider value={theme}>{fallback}</ThemeProvider>;
   }
 
   return (
     <BaseNavigationContainer
-      {...rest}
+      {...restWithoutChildren}
+      initialState={rest.initialState ?? linkingInitialState}
       theme={theme}
       onStateChange={handleStateChange}
       ref={refContainer}
-    />
+    >
+      <LinkingBridge navigationRef={navigationRef} />
+      {rest.children}
+    </BaseNavigationContainer>
   );
+}
+
+
+/**
+ * Publishes the container's imperative handle out of the tree: on ReactLynx a
+ * ref on `BaseNavigationContainer` hands back the Preact component instance
+ * instead, so `useLinking` reads it from context.
+ */
+function LinkingBridge({
+  navigationRef,
+}: {
+  navigationRef: React.RefObject<
+    NavigationContainerRef<ParamListBase> | undefined
+  >;
+}) {
+  const container = React.useContext(NavigationContainerRefContext);
+
+  navigationRef.current = container;
+
+  return null;
 }
