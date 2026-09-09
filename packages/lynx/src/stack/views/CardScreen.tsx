@@ -35,11 +35,12 @@ export function CardScreen({
   // while it sits above the focused index (preloaded / retained).
   const activityMode = isPopped || isDetached ? 'detached' : 'attached';
 
-  // Prevention comes from `usePreventRemove` and nothing else. A static option
-  // would be a trap: the native side would block the gesture, then the
-  // `onNativeDismissPrevented` round-trip below would pop the route anyway,
-  // because only a `beforeRemove` listener can cancel that dispatch.
-  const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
+  // Either source refuses the native dismiss. They differ in what happens
+  // next: `usePreventRemove` also gets a `beforeRemove` event, which is why
+  // `onNativeDismissPrevented` only dispatches when the hook was involved.
+  const isRemovePrevented =
+    preventedRoutes[route.key]?.preventRemove === true ||
+    options.preventNativeDismiss === true;
 
   // Only the focused screen, the one behind it (so a swipe back reveals fresh
   // content) and detached screens stay live. `isBeforeLast` and `isFocused`

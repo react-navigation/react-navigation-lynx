@@ -23,6 +23,7 @@ type StackParamList = {
   Preload: undefined;
   Detail: undefined;
   Sheet: undefined;
+  GuardedSheet: undefined;
 };
 
 const Stack = createLynxStackNavigator({
@@ -37,6 +38,18 @@ const Stack = createLynxStackNavigator({
     Events: EventsScreen,
     Preload: PreloadScreen,
     Detail: DetailScreen,
+    GuardedSheet: {
+      screen: GuardedSheetScreen,
+      options: {
+        presentation: 'formSheet',
+        sheetAllowedDetents: [0.5],
+        sheetGrabberVisible: false,
+        // The static option: the native side refuses the drag-down, and no
+        // hook is involved, so nothing else has to happen.
+        preventNativeDismiss: true,
+        contentStyle: { backgroundColor: colors.card },
+      },
+    },
     Sheet: {
       screen: SheetScreen,
       options: {
@@ -72,6 +85,7 @@ const linking: LinkingOptions<StackParamList> = {
       Preload: 'preload',
       Detail: 'detail',
       Sheet: 'sheet',
+      GuardedSheet: 'guarded-sheet',
     },
   },
 };
@@ -103,6 +117,11 @@ const DEMOS: { route: keyof StackParamList; label: string; note: string }[] = [
     route: 'Sheet',
     label: 'Form sheet',
     note: 'two detents, drag between them to see the event',
+  },
+  {
+    route: 'GuardedSheet',
+    label: 'Guarded sheet',
+    note: 'preventNativeDismiss as a screen option: drag down does nothing',
   },
   {
     route: 'PreventRemove',
@@ -323,6 +342,21 @@ function SheetScreen() {
     <Screen title='Form sheet' subtitle='Drag the grabber to the taller detent'>
       <Button label='Close' tone='plain' onTap={() => navigation.goBack()} />
       <Readout lines={log.length > 0 ? log : ['no detent change yet']} />
+    </Screen>
+  );
+}
+
+/**
+ * Nothing here calls `usePreventRemove`; the refusal is entirely the screen
+ * option's. The only way out is the button.
+ */
+function GuardedSheetScreen() {
+  const navigation = useNav();
+
+  return (
+    <Screen title='Guarded sheet' subtitle='Try dragging this down'>
+      <Button label='Close' tone='plain' onTap={() => navigation.goBack()} />
+      <Readout lines={['preventNativeDismiss: true (screen option)']} />
     </Screen>
   );
 }

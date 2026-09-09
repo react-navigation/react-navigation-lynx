@@ -17,6 +17,13 @@ export type LynxStackNavigationOptions = {
   presentation?: LynxStackPresentation | undefined;
   contentStyle?: Lynx.CSSProperties | undefined;
   /**
+   * Refuse the native dismissal (a back gesture, or dragging a sheet down)
+   * for as long as this is set. `usePreventRemove` does the same from inside
+   * the screen and additionally gets a `beforeRemove` event to act on; this
+   * option is for the case where the screen only needs the refusal.
+   */
+  preventNativeDismiss?: boolean | undefined;
+  /**
    * Heights the sheet can rest at, as fractions of the screen, or
    * `'fitToContents'` to measure the content. `formSheet` only, as is every
    * option below. Names follow `@react-navigation/native-stack`.

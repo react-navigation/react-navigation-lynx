@@ -35,11 +35,11 @@ export function SheetScreen({
   const { route, options } = descriptor;
   const { contentStyle } = options;
 
-  // Prevention comes from `usePreventRemove` and nothing else, for the reason
-  // `CardScreen` spells out: a static option would have the native side block
-  // the gesture and the `onNativeDismissPrevented` round-trip pop the route
-  // anyway, since only a `beforeRemove` listener can cancel that dispatch.
-  const isRemovePrevented = preventedRoutes[route.key]?.preventRemove === true;
+  // Either source refuses the native dismiss; see `CardScreen` for why only
+  // the hook's refusal is followed by a dispatch.
+  const isRemovePrevented =
+    preventedRoutes[route.key]?.preventRemove === true ||
+    options.preventNativeDismiss === true;
 
   return (
     <FormSheetNativeComponent

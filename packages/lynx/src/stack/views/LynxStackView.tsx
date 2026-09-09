@@ -2,6 +2,7 @@ import {
   type ParamListBase,
   StackActions,
   type StackNavigationState,
+  usePreventRemoveContext,
 } from '@react-navigation/core';
 import { StackHostNativeComponent } from 'lynx-screens';
 import type { Dispatch, ReactElement } from 'react';
@@ -37,6 +38,8 @@ function LynxStackViewContent({
   poppedByKey,
   dispatch,
 }: ContentProps) {
+  const { preventedRoutes } = usePreventRemoveContext();
+
   const routeIndexByKey = new Map(
     state.routes.map((route, index) => [route.key, index])
   );
@@ -84,9 +87,16 @@ function LynxStackViewContent({
     });
   };
 
-  // A prevented dismiss still has to reach the router: that is what gives
-  // `usePreventRemove` its `beforeRemove` event to act on.
+  // A prevented dismiss still has to reach the router when `usePreventRemove`
+  // asked for it: that is what gives the hook its `beforeRemove` event to act
+  // on. Prevention that came only from the `preventNativeDismiss` option has
+  // no such listener, so dispatching would pop the screen the native side just
+  // refused to dismiss.
   const onNativeDismissPrevented = (key: string) => {
+    if (!preventedRoutes[key]?.preventRemove) {
+      return;
+    }
+
     const currentState = navigation.getState();
 
     navigation.dispatch({
