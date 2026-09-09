@@ -11,6 +11,7 @@ import type {
   LynxStackNavigationHelpers,
 } from '../types';
 import { CardScreen } from './CardScreen';
+import { SheetScreen } from './SheetScreen';
 import {
   type LynxStackViewState,
   type LynxStackViewStateAction,
@@ -44,7 +45,13 @@ function LynxStackViewContent({
     dispatch({ type: 'REMOVE_POPPED_ROUTE', key });
   };
 
-  const onNativeDismiss = (key: string) => {
+  const onNativeDismiss = ({
+    key,
+    markNativelyDismissed,
+  }: {
+    key: string;
+    markNativelyDismissed: boolean;
+  }) => {
     const currentState = navigation.getState();
     const index = currentState.routes.findIndex((route) => route.key === key);
 
@@ -59,13 +66,16 @@ function LynxStackViewContent({
     }
 
     // The native side has already taken these screens off the stack, so the
-    // reducer must not keep them rendered waiting for a pop animation.
-    dispatch({
-      type: 'ADD_NATIVELY_DISMISSED_ROUTES',
-      keys: currentState.routes
-        .slice(index, currentState.index + 1)
-        .map((route) => route.key),
-    });
+    // reducer must not keep them rendered waiting for a pop animation. A sheet
+    // whose dismissal was prevented is the exception: it is still there.
+    if (markNativelyDismissed) {
+      dispatch({
+        type: 'ADD_NATIVELY_DISMISSED_ROUTES',
+        keys: currentState.routes
+          .slice(index, currentState.index + 1)
+          .map((route) => route.key),
+      });
+    }
 
     navigation.dispatch({
       ...StackActions.pop(dismissCount),
@@ -86,7 +96,12 @@ function LynxStackViewContent({
     });
   };
 
-  const cards = renderedRoutes.reduce<ReactElement[]>((result, route) => {
+  const cards: ReactElement[] = [];
+  // The native sheet is its own host, so these render outside the stack host
+  // rather than as screens in it.
+  const sheets: ReactElement[] = [];
+
+  renderedRoutes.forEach((route) => {
     const index = routeIndexByKey.get(route.key);
     const popped = poppedByKey.get(route.key);
     const descriptor = descriptors[route.key] ?? popped?.descriptor;
@@ -99,13 +114,38 @@ function LynxStackViewContent({
 
     const presentation = descriptor.options.presentation ?? 'card';
 
-    if (presentation !== 'card') {
+    if (presentation !== 'card' && presentation !== 'formSheet') {
       throw new Error(
-        `The route '${route.name}' uses the '${presentation}' presentation, which the Lynx stack does not support yet. Only 'card' is available while form sheet support lands in lynx-screens.`
+        `The route '${route.name}' uses the '${presentation}' presentation, which the Lynx stack does not support. Only 'card' and 'formSheet' are available.`
       );
     }
 
-    result.push(
+    if (presentation === 'formSheet') {
+      if (index === 0) {
+        throw new Error(
+          `The route '${route.name}' cannot use the 'formSheet' presentation because it is the first route in the stack. Add a screen with the 'card' presentation before it.`
+        );
+      }
+
+      sheets.push(
+        <SheetScreen
+          key={route.key}
+          descriptor={descriptor}
+          navigation={navigation}
+          isFocused={index === state.index}
+          isPopped={popped != null}
+          onRemovePoppedRoute={onRemovePoppedRoute}
+          onNativeDismiss={(markNativelyDismissed) =>
+            onNativeDismiss({ key: route.key, markNativelyDismissed })
+          }
+          onNativeDismissPrevented={() => onNativeDismissPrevented(route.key)}
+        />
+      );
+
+      return;
+    }
+
+    cards.push(
       <CardScreen
         key={route.key}
         descriptor={descriptor}
@@ -115,15 +155,20 @@ function LynxStackViewContent({
         isPopped={popped != null}
         isDetached={index != null && index > state.index}
         onRemovePoppedRoute={onRemovePoppedRoute}
-        onNativeDismiss={() => onNativeDismiss(route.key)}
+        onNativeDismiss={() =>
+          onNativeDismiss({ key: route.key, markNativelyDismissed: true })
+        }
         onNativeDismissPrevented={() => onNativeDismissPrevented(route.key)}
       />
     );
+  });
 
-    return result;
-  }, []);
-
-  return <StackHostNativeComponent>{cards}</StackHostNativeComponent>;
+  return (
+    <>
+      <StackHostNativeComponent>{cards}</StackHostNativeComponent>
+      {sheets}
+    </>
+  );
 }
 
 export function LynxStackView({ state, navigation, descriptors }: Props) {
