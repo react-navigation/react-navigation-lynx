@@ -16,11 +16,25 @@ export type LynxStackPresentation = 'card' | 'formSheet';
 export type LynxStackNavigationOptions = {
   presentation?: LynxStackPresentation | undefined;
   contentStyle?: Lynx.CSSProperties | undefined;
+  /**
+   * Heights the sheet can rest at, as fractions of the screen, or
+   * `'fitToContents'` to measure the content. `formSheet` only, as is every
+   * option below. Names follow `@react-navigation/native-stack`.
+   */
+  sheetAllowedDetents?: number[] | 'fitToContents' | undefined;
+  sheetInitialDetentIndex?: number | 'last' | undefined;
+  /** Detents up to this one leave the content behind the sheet undimmed. */
+  sheetLargestUndimmedDetentIndex?: number | 'none' | 'last' | undefined;
+  sheetGrabberVisible?: boolean | undefined;
+  sheetCornerRadius?: number | 'systemDefault' | undefined;
+  sheetExpandsWhenScrolledToEdge?: boolean | undefined;
 };
 
 export type LynxStackNavigationEventMap = {
   transitionStart: { data: { closing: boolean } };
   transitionEnd: { data: { closing: boolean } };
+  /** The detent a `formSheet` settled at, as an index into its detents. */
+  sheetDetentChange: { data: { index: number } };
 };
 
 export type LynxStackNavigationProp<

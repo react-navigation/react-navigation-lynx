@@ -22,6 +22,7 @@ type StackParamList = {
   Events: undefined;
   Preload: undefined;
   Detail: undefined;
+  Sheet: undefined;
 };
 
 const Stack = createLynxStackNavigator({
@@ -36,6 +37,17 @@ const Stack = createLynxStackNavigator({
     Events: EventsScreen,
     Preload: PreloadScreen,
     Detail: DetailScreen,
+    Sheet: {
+      screen: SheetScreen,
+      options: {
+        presentation: 'formSheet',
+        sheetAllowedDetents: [0.4, 0.9],
+        sheetLargestUndimmedDetentIndex: 0,
+        sheetGrabberVisible: true,
+        sheetCornerRadius: 20,
+        contentStyle: { backgroundColor: colors.card },
+      },
+    },
   },
 });
 
@@ -59,6 +71,7 @@ const linking: LinkingOptions<StackParamList> = {
       Events: 'events',
       Preload: 'preload',
       Detail: 'detail',
+      Sheet: 'sheet',
     },
   },
 };
@@ -86,6 +99,11 @@ export function App() {
 
 const DEMOS: { route: keyof StackParamList; label: string; note: string }[] = [
   { route: 'Depth', label: 'Stack depth', note: 'push, popTo, popToTop' },
+  {
+    route: 'Sheet',
+    label: 'Form sheet',
+    note: 'two detents, drag between them to see the event',
+  },
   {
     route: 'PreventRemove',
     label: 'Prevent remove',
@@ -284,6 +302,27 @@ function PreloadScreen() {
       />
       <Button label='Go back' tone='plain' onTap={() => navigation.goBack()} />
       <Readout lines={[preloaded ? 'preloaded' : 'not preloaded yet']} />
+    </Screen>
+  );
+}
+
+/** Reports the detent it settles at, which is the one sheet-only event. */
+function SheetScreen() {
+  const navigation = useNav();
+  const [log, setLog] = useState<string[]>([]);
+
+  useEffect(() => {
+    return navigation.addListener(
+      'sheetDetentChange',
+      (e: { data: { index: number } }) =>
+        setLog((entries) => [`detent ${e.data.index}`, ...entries].slice(0, 6))
+    );
+  }, [navigation]);
+
+  return (
+    <Screen title='Form sheet' subtitle='Drag the grabber to the taller detent'>
+      <Button label='Close' tone='plain' onTap={() => navigation.goBack()} />
+      <Readout lines={log.length > 0 ? log : ['no detent change yet']} />
     </Screen>
   );
 }
