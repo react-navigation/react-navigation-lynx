@@ -35,9 +35,8 @@ jobs:
   build-example:
     runs-on: ubuntu-latest
     steps:
-      # Building the example is what proves the submodule wiring still holds -
-      # the extension aliasing lives in the bundler config and nothing else
-      # exercises it.
+      # Building the example is what proves the submodule wiring still holds:
+      # nothing else bundles the vendored packages.
       - name: Checkout
         uses: actions/checkout@v4
         with:
