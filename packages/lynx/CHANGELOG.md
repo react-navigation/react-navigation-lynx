@@ -1,5 +1,17 @@
 # @react-navigation/lynx
 
+## 0.4.0
+
+### Minor Changes
+
+- Render `presentation: 'formSheet'` routes. The option was accepted by the types and then thrown on, so it was unusable. Sheets render through `FormSheetNativeComponent` as siblings of the stack host, open and close with focus, and report the detent they settle at as a `sheetDetentChange` event. The option names follow `@react-navigation/native-stack`. ([#16](https://github.com/react-navigation/react-navigation-lynx/pull/16))
+
+- Line the root export up with `@react-navigation/native`: `LinkingContext`, `LocaleDirContext` and `useLocale` (with a `direction` prop on `NavigationContainer`), `useLinkTo`, `useLinkBuilder`, `useRoutePath`, the Material fallback themes, and every type from `types`. `@react-navigation/lynx/stack` now exports `LynxStackView` and `LynxStackOptionsArgs` like `native-stack` does, and no longer exports the descriptor and helper types that `native-stack` keeps internal. ([#19](https://github.com/react-navigation/react-navigation-lynx/pull/19))
+
+### Patch Changes
+
+- Declare `@types/react@>=19.2` as an optional peer dependency, so a consumer on `@types/react` 18 hears about it from the package manager instead of from a `Stack.Navigator cannot be used as a JSX component` error. ([#21](https://github.com/react-navigation/react-navigation-lynx/pull/21))
+
 ## 0.3.0
 
 ### Minor Changes
