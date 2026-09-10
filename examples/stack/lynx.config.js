@@ -20,13 +20,7 @@ export default defineConfig({
   },
   plugins: [
     pluginReactLynx(),
-    pluginTypeCheck({
-      tsCheckerOptions: {
-        issue: {
-          exclude: [{ file: '../../react-navigation/**' }],
-        },
-      },
-    }),
+    pluginTypeCheck(),
     pluginQRCode({
       schema(url) {
         return `${url}?fullscreen=true`;
