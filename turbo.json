@@ -1,23 +1,53 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "globalDependencies": ["pnpm-lock.yaml"],
-  "globalPassThroughEnv": ["CI", "NODE_OPTIONS"],
+  "globalDependencies": [
+    "pnpm-lock.yaml"
+  ],
+  "globalPassThroughEnv": [
+    "CI",
+    "NODE_OPTIONS"
+  ],
   "ui": "tui",
   "tasks": {
+    "prepack": {
+      "dependsOn": [
+        "^prepack"
+      ],
+      "inputs": [
+        "src/**",
+        "package.json",
+        "tsconfig*.json"
+      ],
+      "outputs": [
+        "lib/**"
+      ]
+    },
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "dependsOn": [
+        "^prepack",
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
     },
     "dev": {
+      "dependsOn": [
+        "^prepack"
+      ],
       "cache": false,
       "persistent": true
     },
     "test": {
-      "dependsOn": [],
+      "dependsOn": [
+        "^prepack"
+      ],
       "cache": false
     },
     "typecheck": {
-      "dependsOn": [],
+      "dependsOn": [
+        "^prepack"
+      ],
       "cache": false
     }
   }

@@ -32,9 +32,15 @@ import surface, and navigators sit on top of it rather than on core directly.
 
 ```sh
 pnpm install
-pnpm --filter @react-navigation/lynx test
-pnpm --filter @react-navigation/lynx typecheck
+pnpm test
+pnpm typecheck
 ```
+
+The vendored `@react-navigation/core` and `@react-navigation/routers` are
+consumed through their normal `exports`, like the published packages, so their
+`lib/` has to exist: `pnpm build:vendored` builds it (`turbo run prepack`), and
+the turbo tasks depend on it, so `pnpm typecheck`, `pnpm test`, `pnpm dev` and
+`pnpm build` rebuild it whenever the submodules change.
 
 `typecheck` reports diagnostics from the vendored sources but only fails on
 this package's own. Those sources are written against React's types while this

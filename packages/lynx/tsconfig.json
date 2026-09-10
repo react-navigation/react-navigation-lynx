@@ -3,7 +3,6 @@
     "target": "esnext",
     "module": "preserve",
     "moduleResolution": "bundler",
-    "customConditions": ["@react-navigation/source"],
     "lib": ["esnext", "dom"],
     "types": ["node"],
     "jsx": "react-jsx",
