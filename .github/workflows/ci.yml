@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # The submodules are the dependency graph, not a convenience: core and
-      # lynx-screens are consumed as source, so a shallow checkout builds
-      # nothing.
+      # routers are built from source on install, and lynx-screens is consumed
+      # as source, so a shallow checkout builds nothing.
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -35,9 +35,8 @@ jobs:
   build-example:
     runs-on: ubuntu-latest
     steps:
-      # Building the example is what proves the submodule wiring still holds -
-      # the source export condition and the extension aliasing both live in the
-      # bundler config and nothing else exercises them.
+      # Building the example is what proves the submodule wiring still holds:
+      # nothing else bundles the vendored packages.
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -47,7 +46,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build example
-        run: pnpm --filter @react-navigation/example-stack build
+        run: pnpm turbo run build --filter @react-navigation/example-stack
 
   preview:
     runs-on: ubuntu-latest

@@ -18,37 +18,9 @@ export default defineConfig({
       react$: reactCompat,
     },
   },
-  tools: {
-    rspack: {
-      resolve: {
-        // Both submodules ship TypeScript sources whose relative imports carry
-        // `.js`, which only resolves once you map it back onto the file that
-        // actually exists.
-        extensionAlias: {
-          '.js': ['.ts', '.tsx', '.js'],
-          '.jsx': ['.tsx', '.jsx'],
-        },
-        // Same condition the upstream monorepo uses to resolve its packages to
-        // TypeScript source, so the submodule needs no build step.
-        conditionNames: [
-          '@react-navigation/source',
-          'lynx',
-          'import',
-          'require',
-          'default',
-        ],
-      },
-    },
-  },
   plugins: [
     pluginReactLynx(),
-    pluginTypeCheck({
-      tsCheckerOptions: {
-        issue: {
-          exclude: [{ file: '../../react-navigation/**' }],
-        },
-      },
-    }),
+    pluginTypeCheck(),
     pluginQRCode({
       schema(url) {
         return `${url}?fullscreen=true`;
