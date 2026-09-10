@@ -9,35 +9,11 @@ import {
 import * as React from 'react';
 
 import { extractPathFromURL } from './extractPathFromURL';
+import type { LinkingOptions, LinkingPrefix } from './types';
 import {
   getInitialURL as getInitialURLDefault,
   subscribe as subscribeDefault,
 } from './linking';
-
-// core keeps its `Options` type internal; derive it from the consumer so it
-// cannot drift.
-type LinkingConfig<ParamList extends {}> = NonNullable<
-  Parameters<typeof getStateFromPathDefault<ParamList>>[1]
->;
-
-export type LinkingPrefix = '*' | (string & {});
-
-export type LinkingOptions<ParamList extends {}> = {
-  /** Defaults to true when a config is given. */
-  enabled?: boolean | undefined;
-  prefixes?: LinkingPrefix[] | undefined;
-  /** Rejects a URL before its prefix is stripped. */
-  filter?: ((url: string) => boolean) | undefined;
-  config?: LinkingConfig<ParamList> | undefined;
-  /** Overrides where the launch URL comes from. */
-  getInitialURL?: (() => string | undefined) | undefined;
-  /** Overrides how later URLs arrive. */
-  subscribe?:
-    | ((listener: (url: string) => void) => undefined | void | (() => void))
-    | undefined;
-  getStateFromPath?: typeof getStateFromPathDefault | undefined;
-  getActionFromState?: typeof getActionFromStateDefault | undefined;
-} & { [key: string]: unknown };
 
 /** The `getStateFromHref` contract of `@react-navigation/native`. */
 function extractPath(

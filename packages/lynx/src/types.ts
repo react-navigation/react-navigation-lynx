@@ -1,3 +1,9 @@
+import type {
+  getActionFromState as getActionFromStateDefault,
+  getPathFromState as getPathFromStateDefault,
+  getStateFromPath as getStateFromPathDefault,
+} from '@react-navigation/core';
+
 type FontStyle = {
   fontFamily: string;
   fontWeight:
@@ -40,3 +46,31 @@ export interface LynxTheme {
 declare module '@react-navigation/core' {
   interface Theme extends LynxTheme {}
 }
+
+export type LocaleDirection = 'ltr' | 'rtl';
+
+// core keeps its `Options` type internal; derive it from the consumer so it
+// cannot drift.
+type LinkingConfig<ParamList extends {}> = NonNullable<
+  Parameters<typeof getStateFromPathDefault<ParamList>>[1]
+>;
+
+export type LinkingPrefix = '*' | (string & {});
+
+export type LinkingOptions<ParamList extends {}> = {
+  /** Defaults to true when a config is given. */
+  enabled?: boolean | undefined;
+  prefixes?: LinkingPrefix[] | undefined;
+  /** Rejects a URL before its prefix is stripped. */
+  filter?: ((url: string) => boolean) | undefined;
+  config?: LinkingConfig<ParamList> | undefined;
+  /** Overrides where the launch URL comes from. */
+  getInitialURL?: (() => string | undefined) | undefined;
+  /** Overrides how later URLs arrive. */
+  subscribe?:
+    | ((listener: (url: string) => void) => undefined | void | (() => void))
+    | undefined;
+  getStateFromPath?: typeof getStateFromPathDefault | undefined;
+  getPathFromState?: typeof getPathFromStateDefault | undefined;
+  getActionFromState?: typeof getActionFromStateDefault | undefined;
+} & { [key: string]: unknown };
