@@ -8,16 +8,19 @@ export {
 } from './navigators/createLynxStackNavigator';
 
 /**
+ * Views
+ */
+export { LynxStackView } from './views/LynxStackView';
+
+/**
  * Types
  */
 export type {
-  LynxStackDescriptor,
-  LynxStackDescriptorMap,
   LynxStackNavigationEventMap,
-  LynxStackNavigationHelpers,
   LynxStackNavigationOptions,
   LynxStackNavigationProp,
   LynxStackNavigatorProps,
+  LynxStackOptionsArgs,
   LynxStackPresentation,
   LynxStackScreenProps,
 } from './types';
