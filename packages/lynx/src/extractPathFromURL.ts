@@ -1,6 +1,6 @@
 import escapeStringRegexp from 'escape-string-regexp';
 
-import type { LinkingPrefix } from './useLinking';
+import type { LinkingPrefix } from './types';
 
 /** Verbatim from `@react-navigation/native`, which cannot be imported here. */
 export function extractPathFromURL(prefixes: LinkingPrefix[], url: string) {

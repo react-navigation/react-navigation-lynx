@@ -8,6 +8,7 @@ import type {
   StackActionHelpers,
   StackNavigationState,
   StackRouterOptions,
+  Theme,
 } from '@react-navigation/core';
 import type * as Lynx from '@lynx-js/types';
 
@@ -55,6 +56,13 @@ export type LynxStackScreenProps<
 > = {
   navigation: LynxStackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
+};
+
+export type LynxStackOptionsArgs<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = keyof ParamList,
+> = LynxStackScreenProps<ParamList, RouteName> & {
+  theme: Theme;
 };
 
 export type LynxStackNavigationHelpers = NavigationHelpers<

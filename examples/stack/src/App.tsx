@@ -4,9 +4,11 @@ import {
   getInitialURL,
   type LinkingOptions,
   StackActions,
+  useLinkTo,
   useNavigation,
   useNavigationState,
   usePreventRemove,
+  useRoutePath,
 } from '@react-navigation/lynx';
 import {
   createLynxStackNavigator,
@@ -119,6 +121,7 @@ const DEMOS: { route: keyof StackParamList; label: string; note: string }[] = [
 
 function HomeScreen() {
   const navigation = useNav();
+  const linkTo = useLinkTo();
   // Rendered so a deep link can be confirmed from the device without a debugger.
   const routeNames = useNavigationState((state) =>
     state.routes.map((route) => route.name).join(' \u203a ')
@@ -132,6 +135,7 @@ function HomeScreen() {
           `stack: ${routeNames}`,
         ]}
       />
+      <Button label='Link to /detail' tone='plain' onTap={() => linkTo('/detail')} />
       {DEMOS.map((demo) => (
         <view key={demo.route}>
           <Button
@@ -329,12 +333,18 @@ function SheetScreen() {
 
 function DetailScreen() {
   const navigation = useNav();
+  const path = useRoutePath();
   const [mountedAt] = useState(() => Date.now());
 
   return (
     <Screen title='Detail' subtitle='Plain card screen' background='#fff6e5'>
       <Button label='Go back' tone='plain' onTap={() => navigation.goBack()} />
-      <Readout lines={[`mounted at ${new Date(mountedAt).toLocaleTimeString()}`]} />
+      <Readout
+        lines={[
+          `path: ${path ?? '(linking disabled)'}`,
+          `mounted at ${new Date(mountedAt).toLocaleTimeString()}`,
+        ]}
+      />
     </Screen>
   );
 }

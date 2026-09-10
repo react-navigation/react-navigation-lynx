@@ -1,21 +1,32 @@
 import {
   BaseNavigationContainer,
+  getActionFromState,
+  getPathFromState,
+  getStateFromPath,
   type NavigationContainerProps,
   type NavigationContainerRef,
   type NavigationState,
   type ParamListBase,
   type Theme,
   ThemeProvider,
+  validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
 
+import { LinkingContext } from './LinkingContext';
+import { LocaleDirContext } from './LocaleDirContext';
 import { LightTheme } from './theming/LightTheme';
-import { type LinkingOptions, useLinking } from './useLinking';
+import type { LinkingOptions, LocaleDirection } from './types';
+import { useLinking } from './useLinking';
+
+const DEFAULT_DIRECTION: LocaleDirection = 'ltr';
 
 export type NavigationContainerLynxProps<
   ParamList extends {} = ParamListBase,
 > = NavigationContainerProps & {
   theme?: Theme | undefined;
+  /** Text direction of the components. Defaults to `'ltr'`. */
+  direction?: LocaleDirection | undefined;
   /** Rendered while persisted state is being restored. */
   fallback?: React.ReactNode | undefined;
   /** Maps URLs handed over by the host onto navigation state. */
@@ -31,6 +42,7 @@ export type NavigationContainerLynxProps<
  */
 export function NavigationContainer<ParamList extends {} = ParamListBase>({
   theme = LightTheme,
+  direction = DEFAULT_DIRECTION,
   fallback = null,
   onStateChange,
   linking,
@@ -52,6 +64,27 @@ export function NavigationContainer<ParamList extends {} = ParamListBase>({
     rest.initialState != null ? undefined : getInitialState()
   );
 
+  const linkingConfig = React.useMemo(() => {
+    if (linking == null) {
+      return { options: { enabled: false } };
+    }
+
+    if (linking.config) {
+      validatePathConfig(linking.config);
+    }
+
+    return {
+      options: {
+        ...linking,
+        enabled: linking.enabled !== false,
+        prefixes: linking.prefixes ?? ['*'],
+        getStateFromPath: linking.getStateFromPath ?? getStateFromPath,
+        getPathFromState: linking.getPathFromState ?? getPathFromState,
+        getActionFromState: linking.getActionFromState ?? getActionFromState,
+      },
+    };
+  }, [linking]);
+
   const { children: _children, ...restWithoutChildren } = rest;
 
   const handleStateChange = (state: Readonly<NavigationState> | undefined) => {
@@ -59,18 +92,26 @@ export function NavigationContainer<ParamList extends {} = ParamListBase>({
   };
 
   if (rest.children == null) {
-    return <ThemeProvider value={theme}>{fallback}</ThemeProvider>;
+    return (
+      <LocaleDirContext.Provider value={direction}>
+        <ThemeProvider value={theme}>{fallback}</ThemeProvider>
+      </LocaleDirContext.Provider>
+    );
   }
 
   return (
-    <BaseNavigationContainer
-      {...restWithoutChildren}
-      initialState={rest.initialState ?? linkingInitialState}
-      theme={theme}
-      onStateChange={handleStateChange}
-      ref={refContainer}
-    >
-      {rest.children}
-    </BaseNavigationContainer>
+    <LocaleDirContext.Provider value={direction}>
+      <LinkingContext.Provider value={linkingConfig}>
+        <BaseNavigationContainer
+          {...restWithoutChildren}
+          initialState={rest.initialState ?? linkingInitialState}
+          theme={theme}
+          onStateChange={handleStateChange}
+          ref={refContainer}
+        >
+          {rest.children}
+        </BaseNavigationContainer>
+      </LinkingContext.Provider>
+    </LocaleDirContext.Provider>
   );
 }
