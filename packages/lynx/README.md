@@ -29,6 +29,20 @@ resolve: {
 },
 ```
 
+`@react-navigation/core` also lists `react` as a peer dependency, which the
+alias above satisfies at build time but no package manager can see. pnpm's
+default `auto-install-peers` papers over that; with `strict-peer-dependencies`
+on, tell pnpm the peer is intentionally absent:
+
+```yaml
+# pnpm-workspace.yaml
+peerDependencyRules:
+  ignoreMissing: ['react']
+```
+
+The types are written against `@types/react` 19, so a TypeScript app needs
+`@types/react@>=19.2` (declared as an optional peer).
+
 ## Usage
 
 ```tsx

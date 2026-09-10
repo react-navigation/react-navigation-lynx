@@ -37,7 +37,8 @@
   },
   "peerDependencies": {
     "@lynx-js/react": "*",
-    "lynx-screens": "*"
+    "lynx-screens": "*",
+    "@types/react": ">=19.2"
   },
   "devDependencies": {
     "@lynx-js/react": "^0.126.0",
@@ -52,5 +53,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
   }
 }
