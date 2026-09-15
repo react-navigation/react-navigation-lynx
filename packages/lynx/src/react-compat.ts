@@ -1,3 +1,7 @@
+// Copyright 2026 The Lynx Authors. All rights reserved.
+// Licensed under the Apache License Version 2.0 that can be found in the
+// LICENSE file in the root directory of this source tree.
+
 // ReactLynx is Preact-based and does not implement every hook that
 // `@react-navigation/core` imports from `react`. The Lynx build aliases
 // `react` to this module (runtime alias in the bundler config, `paths` in

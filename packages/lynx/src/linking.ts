@@ -1,3 +1,7 @@
+// Copyright 2026 The Lynx Authors. All rights reserved.
+// Licensed under the Apache License Version 2.0 that can be found in the
+// LICENSE file in the root directory of this source tree.
+
 /**
  * The Lynx half of React Navigation's linking: a card is not the process that
  * receives the URL, so the host hands it over either through
