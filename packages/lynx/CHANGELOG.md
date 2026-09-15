@@ -1,5 +1,11 @@
 # @react-navigation/lynx
 
+## 0.4.4
+
+### Patch Changes
+
+- Support `@react-navigation/core` 8.0.0-alpha.35, which renders custom navigators through `render` instead of `NavigationContent`. ([#28](https://github.com/react-navigation/react-navigation-lynx/pull/28))
+
 ## 0.4.3
 
 ### Patch Changes
