@@ -1,5 +1,11 @@
 # @react-navigation/lynx
 
+## 0.4.3
+
+### Patch Changes
+
+- Point the `react` alias at `@lynx-js/react/compat`, which runs `use` on the main thread from 0.126.1. `@react-navigation/lynx/react-compat` stays for 0.126.0. ([#26](https://github.com/react-navigation/react-navigation-lynx/pull/26))
+
 ## 0.4.2
 
 ### Patch Changes
