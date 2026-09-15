@@ -32,33 +32,30 @@ function LynxStackNavigator({
   router,
   ...rest
 }: LynxStackNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      StackNavigationState<ParamListBase>,
-      StackRouterOptions,
-      StackActionHelpers<ParamListBase>,
-      LynxStackNavigationOptions,
-      LynxStackNavigationEventMap
-    >(StackRouter, {
-      initialRouteName,
-      routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      router,
-    });
+  const { state, descriptors, navigation, render } = useNavigationBuilder<
+    StackNavigationState<ParamListBase>,
+    StackRouterOptions,
+    StackActionHelpers<ParamListBase>,
+    LynxStackNavigationOptions,
+    LynxStackNavigationEventMap
+  >(StackRouter, {
+    initialRouteName,
+    routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    router,
+  });
 
-  return (
-    <NavigationContent>
-      <LynxStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
-    </NavigationContent>
+  return render(
+    <LynxStackView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+    />
   );
 }
 
