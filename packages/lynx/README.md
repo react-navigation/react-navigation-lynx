@@ -10,7 +10,7 @@ on top of it.
 ## Installation
 
 ```sh
-npm install @react-navigation/lynx lynx-screens
+npm install @react-navigation/lynx lynx-screens@next
 ```
 
 `@lynx-js/react` and `lynx-screens` are peer dependencies. The stack navigator

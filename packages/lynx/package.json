@@ -37,7 +37,7 @@
   },
   "peerDependencies": {
     "@lynx-js/react": "*",
-    "lynx-screens": "*",
+    "lynx-screens": ">=0.1.0-alpha.1",
     "@types/react": ">=19.2"
   },
   "devDependencies": {
