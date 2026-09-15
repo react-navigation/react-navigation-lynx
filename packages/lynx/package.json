@@ -42,7 +42,7 @@
     "@types/react": ">=19.2"
   },
   "devDependencies": {
-    "@lynx-js/react": "^0.126.0",
+    "@lynx-js/react": "^0.126.1",
     "@lynx-js/testing-environment": "^0.3.4",
     "@lynx-js/types": "^4.2.1",
     "@types/react": "~19.2.17",

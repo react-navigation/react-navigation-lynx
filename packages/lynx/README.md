@@ -23,17 +23,21 @@ host app as well.
 `@lynx-js/react` has to be 0.126 or later, where `ref` reaches components as a
 prop the way it does in React 19; `NavigationContainer` depends on that.
 
-`react` has to resolve to a ReactLynx-compatible runtime, since
-`@react-navigation/core` imports hooks React Native provides:
+`@react-navigation/core` is written against React, so `react` has to resolve to
+ReactLynx's compat entry, which adds `use`, `useInsertionEffect` and
+`startTransition`:
 
-```js
-// lynx.config.js
+```ts
+// rsbuild.config.ts
 resolve: {
   alias: {
-    react$: require.resolve('@react-navigation/lynx/react-compat'),
+    react$: require.resolve('@lynx-js/react/compat'),
   },
 },
 ```
+
+`use` works on the main thread from `@lynx-js/react` 0.126.1. On 0.126.0, alias
+`react$` to `@react-navigation/lynx/react-compat` instead.
 
 `@react-navigation/core` also lists `react` as a peer dependency, which the
 alias above satisfies at build time but no package manager can see. pnpm's
