@@ -1,5 +1,11 @@
 # @react-navigation/lynx
 
+## 0.4.2
+
+### Patch Changes
+
+- License the package under Apache-2.0, and ship the license text with it. ([#24](https://github.com/react-navigation/react-navigation-lynx/pull/24))
+
 ## 0.4.1
 
 ### Patch Changes
