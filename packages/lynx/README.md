@@ -1,5 +1,8 @@
 # `@react-navigation/lynx`
 
+[![npm][npm-badge]][npm]
+[![Apache-2.0 licensed][license-badge]][license]
+
 [React Navigation](https://reactnavigation.org) for [Lynx](https://lynxjs.org).
 
 This is the platform layer, the same role `@react-navigation/native` plays for
@@ -16,6 +19,9 @@ npm install @react-navigation/lynx lynx-screens@next
 `@lynx-js/react` and `lynx-screens` are peer dependencies. The stack navigator
 renders through `lynx-screens`, so its native side has to be linked into the
 host app as well.
+
+`@lynx-js/react` has to be 0.126 or later, where `ref` reaches components as a
+prop the way it does in React 19; `NavigationContainer` depends on that.
 
 `react` has to resolve to a ReactLynx-compatible runtime, since
 `@react-navigation/core` imports hooks React Native provides:
@@ -191,6 +197,13 @@ route instead of on the fallback.
 import { getInitialURL, subscribe } from '@react-navigation/lynx';
 ```
 
+## Example
+
+A runnable app lives in
+[`examples/stack`](https://github.com/react-navigation/react-navigation-lynx/tree/main/examples/stack);
+the [repository README](https://github.com/react-navigation/react-navigation-lynx#example)
+explains how to run it.
+
 ## Differences from `@react-navigation/native`
 
 - No `Link`, `useLinkTo`, `useLinkBuilder` or `useRoutePath` yet: only the
@@ -199,3 +212,13 @@ import { getInitialURL, subscribe } from '@react-navigation/lynx';
   native stack owns dismissal per screen, so a container handler would fight
   with it.
 - `getInitialURL` is synchronous, as above.
+
+## License
+
+Licensed under the [Apache License 2.0](LICENSE). Files ported from React
+Navigation keep their original MIT notice.
+
+[npm-badge]: https://img.shields.io/npm/v/@react-navigation/lynx.svg
+[npm]: https://www.npmjs.com/package/@react-navigation/lynx
+[license-badge]: https://img.shields.io/badge/License-Apache--2.0-cyan?logo=apache
+[license]: LICENSE

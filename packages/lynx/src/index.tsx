@@ -1,3 +1,7 @@
+// Copyright 2026 The Lynx Authors. All rights reserved.
+// Licensed under the Apache License Version 2.0 that can be found in the
+// LICENSE file in the root directory of this source tree.
+
 // The platform layer, mirroring what `@react-navigation/native` does for
 // React Native: it owns everything Lynx-specific that every navigator needs,
 // and re-exports core so apps have a single import surface.
