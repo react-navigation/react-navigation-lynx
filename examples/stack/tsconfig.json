@@ -6,11 +6,12 @@
     "lib": ["esnext"],
     "jsx": "react-jsx",
     "jsxImportSource": "@lynx-js/react",
+    "types": ["@rsbuild/core/types"],
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
     "isolatedModules": true,
     "resolvePackageJsonImports": false
   },
-  "include": ["src", "lynx.config.js"]
+  "include": ["src", "rsbuild.config.ts"]
 }

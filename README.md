@@ -61,7 +61,7 @@ import surface, and navigators sit on top of it rather than on core directly.
 
 - `.` - platform layer
 - `./stack` - stack navigator, backed by `lynx-screens`
-- `./react-compat` - the `react` entry for the bundler alias
+- `./react-compat` - a `react` entry for `@lynx-js/react` 0.126.0, whose own compat entry cannot run `use` on the main thread
 
 ## Development
 
