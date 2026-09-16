@@ -1,5 +1,11 @@
 # @react-navigation/lynx
 
+## 0.4.6
+
+### Patch Changes
+
+- Keep a popped card screen rendered while it animates out, so going back with `navigation.goBack()` slides the screen away instead of dropping it at once. Inactive card screens now follow the new `inactiveBehavior` option, which defaults to `pause` and keeps them mounted. ([#32](https://github.com/react-navigation/react-navigation-lynx/pull/32))
+
 ## 0.4.5
 
 ### Patch Changes
