@@ -1,5 +1,11 @@
 # @react-navigation/lynx
 
+## 0.4.5
+
+### Patch Changes
+
+- Polyfill the builtins Lynx's JS engine doesn't implement. `@react-navigation/core`, `@react-navigation/routers` and `query-string` call `Array.prototype.findLast`, `findLastIndex` and `at`, `Object.hasOwn`, `String.prototype.replaceAll` and `queueMicrotask`, so navigating a stack crashed with `findLast is not a function`. ([#30](https://github.com/react-navigation/react-navigation-lynx/pull/30))
+
 ## 0.4.4
 
 ### Patch Changes
