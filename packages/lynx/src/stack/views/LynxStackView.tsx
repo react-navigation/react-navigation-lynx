@@ -14,6 +14,7 @@ import type {
   LynxStackDescriptorMap,
   LynxStackNavigationHelpers,
 } from '../types';
+import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { CardScreen } from './CardScreen';
 import { SheetScreen } from './SheetScreen';
 import {
@@ -41,6 +42,8 @@ function LynxStackViewContent({
   poppedByKey,
   dispatch,
 }: ContentProps) {
+  const { setNextDismissedKey } = useDismissedRouteError(state);
+
   const routeIndexByKey = new Map(
     state.routes.map((route, index) => [route.key, index])
   );
@@ -86,6 +89,10 @@ function LynxStackViewContent({
       source: key,
       target: currentState.key,
     });
+
+    if (markNativelyDismissed) {
+      setNextDismissedKey(key);
+    }
   };
 
   // A prevented dismiss still has to reach the router: that is what gives
@@ -129,6 +136,28 @@ function LynxStackViewContent({
         throw new Error(
           `The route '${route.name}' cannot use the 'formSheet' presentation because it is the first route in the stack. Add a screen with the 'card' presentation before it.`
         );
+      }
+
+      const routeAboveSheet =
+        index != null && index < state.index
+          ? state.routes[index + 1]
+          : undefined;
+
+      if (routeAboveSheet != null) {
+        throw new Error(
+          `The route '${routeAboveSheet.name}' was pushed above the form sheet route '${route.name}' in the same Lynx stack. A form sheet does not create a nested stack automatically. Render a nested navigator inside '${route.name}' and push '${routeAboveSheet.name}' on that nested navigator instead.`
+        );
+      }
+
+      if (popped?.focusedReplacementKey != null) {
+        const replacementDescriptor =
+          descriptors[popped.focusedReplacementKey];
+
+        if (replacementDescriptor?.options.presentation === 'formSheet') {
+          throw new Error(
+            `The form sheet route '${replacementDescriptor.route.name}' cannot replace '${route.name}' in the same Lynx stack. Wait for the previous sheet to close before presenting another sheet.`
+          );
+        }
       }
 
       sheets.push(
