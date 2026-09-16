@@ -23,6 +23,11 @@ host app as well.
 `@lynx-js/react` has to be 0.126 or later, where `ref` reaches components as a
 prop the way it does in React 19; `NavigationContainer` depends on that.
 
+Lynx's JS engine is missing builtins that `@react-navigation/core`,
+`@react-navigation/routers` and `query-string` call, so importing this package
+installs conditional polyfills for `Array.prototype.findLast`, `findLastIndex`
+and `at`, `Object.hasOwn`, `String.prototype.replaceAll` and `queueMicrotask`.
+
 `@react-navigation/core` is written against React, so `react` has to resolve to
 ReactLynx's compat entry, which adds `use`, `useInsertionEffect` and
 `startTransition`:
