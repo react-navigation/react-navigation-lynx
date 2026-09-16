@@ -1,6 +1,6 @@
 {
   "name": "@react-navigation/lynx",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Lynx integration for React Navigation",
   "license": "Apache-2.0",
   "keywords": [
